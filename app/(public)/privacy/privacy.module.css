@@ -1,0 +1,188 @@
+.page {
+  min-height: 100vh;
+}
+
+.page_light {
+  background: linear-gradient(to bottom, #f5f0e8 0%, #ebe6de 100%);
+  color: #2d2d2d;
+}
+
+.page_dark {
+  background: linear-gradient(to bottom, #2d2d2d 0%, #1a1a1a 100%);
+  color: #f5f0e8;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 2rem;
+  border-bottom: 1px solid rgba(45, 45, 45, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.page_light .header {
+  background: rgba(245, 240, 232, 0.95);
+}
+
+.page_dark .header {
+  background: rgba(45, 45, 45, 0.95);
+  border-bottom-color: rgba(245, 240, 232, 0.1);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid #2d2d2d;
+  background: transparent;
+  color: #2d2d2d;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page_dark .backBtn {
+  border-color: #f5f0e8;
+  color: #f5f0e8;
+}
+
+.backBtn:hover {
+  background: rgba(45, 45, 45, 0.1);
+}
+
+.page_dark .backBtn:hover {
+  background: rgba(245, 240, 232, 0.1);
+}
+
+.backText {
+  display: inline;
+}
+
+.lastUpdated {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.hero {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  opacity: 0.8;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+.section {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  border-radius: 1rem;
+}
+
+.page_light .section {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.page_dark .section {
+  background: rgba(58, 58, 58, 0.6);
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.sectionText {
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.list {
+  margin-left: 1.5rem;
+  line-height: 1.8;
+}
+
+.list li {
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+@media (max-width: 800px) {
+  .header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .backBtn {
+    padding: 0.75rem;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+  }
+  
+  .backText {
+    display: none;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .headerContent {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 500px) {
+  .header {
+    padding: 1rem;
+  }
+  
+  .hero {
+    padding: 3rem 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: 1.125rem;
+  }
+  
+  .content {
+    padding: 0 1.5rem 3rem;
+  }
+  
+  .section {
+    padding: 1.5rem;
+  }
+}
