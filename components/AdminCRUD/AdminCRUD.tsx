@@ -149,18 +149,19 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
                     style={{ cursor: 'pointer' }}
                   />
                 ) : col.type === 'boolean' ? (
-                  <input
-                    type="text"
-                    value={editing[col.key]?.toString() || 'false'}
-                    onClick={() => {
-                      setSelectField({ ...col, options: ['true', 'false'] });
-                      selectController.setSelectionState('data');
-                      selectController.open();
-                    }}
-                    readOnly
-                    placeholder="Select Yes/No"
-                    style={{ cursor: 'pointer' }}
-                  />
+                  <div className={styles.switchContainer}>
+                    <label className={styles.switch}>
+                      <input
+                        type="checkbox"
+                        checked={editing[col.key] === true || editing[col.key] === 'true'}
+                        onChange={(e) => setEditing({ ...editing, [col.key]: e.target.checked })}
+                      />
+                      <span className={`${styles.slider} ${styles[`slider_${theme}`]}`}></span>
+                    </label>
+                    <span className={styles.switchLabel}>
+                      {editing[col.key] === true || editing[col.key] === 'true' ? 'Yes' : 'No'}
+                    </span>
+                  </div>
                 ) : (
                   <input type={col.type} name={col.key} defaultValue={editing[col.key]} required={col.required} />
                 )}
@@ -202,6 +203,7 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
         id={selectId}
         isOpen={selectIsOpen}
         onClose={selectController.close}
+        backDrop={true}
         titleProp={{
           text: selectField?.label || 'Select',
           textColor: theme === 'light' ? 'var(--background)' : '#fff'
@@ -223,7 +225,7 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
         snapPoints={[0, 1]}
         initialSnap={1}
         minHeight="40vh"
-        maxHeight="60vh"
+        maxHeight="88vh"
         closeThreshold={0.2}
         selectionState={selectState}
         zIndex={1000}

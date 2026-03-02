@@ -5,14 +5,9 @@
   position: relative;
   padding-bottom: var(--nav-height);
   box-sizing: border-box;
-  min-height: 100vh;
+
 }
 
-.container_light {
-}
-
-.container_dark {
-}
 
 .header {
   position: fixed;
@@ -358,4 +353,71 @@
   .deleteBtn {
     flex: 1;
   }
+}
+
+.switchContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 28px;
+  transition: 0.3s;
+}
+
+.slider_light {
+  background-color: #cbd5e1;
+}
+
+.slider_dark {
+  background-color: #4a4a4a;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch input:checked + .slider_light {
+  background-color: #16a34a;
+}
+
+.switch input:checked + .slider_dark {
+  background-color: #22c55e;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+.switchLabel {
+  font-weight: 500;
+  font-size: 0.9rem;
 }
