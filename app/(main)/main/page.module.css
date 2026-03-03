@@ -3,18 +3,9 @@
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  height: 100dvh;
 }
 
-.mainContainer_light {
-  background: #f8fafc;
-  color: #1f2937;
-}
 
-.mainContainer_dark {
-  background: var(--background);
-  color: #f1f5f9;
-}
 
 .contentWrapper {
   display: flex;

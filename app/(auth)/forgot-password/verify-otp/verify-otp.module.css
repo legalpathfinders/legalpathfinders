@@ -1,18 +1,11 @@
 .container {
-
+min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
 }
 
-.container_light {
-  background: #f9fafb;
-}
-
-.container_dark {
-  background: #111827;
-}
 
 .card {
   width: 100%;

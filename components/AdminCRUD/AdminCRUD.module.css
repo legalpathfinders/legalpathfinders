@@ -20,12 +20,10 @@
 }
 
 .header_light {
-  background-color: rgba(255, 255, 255, 0.8);
   border-bottom: 1px solid #C4C4C4;
 }
 
 .header_dark {
-  background-color: var(--background);
   border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -102,6 +100,7 @@
   padding: 1.5rem;
   border-radius: 12px;
   border: 1px solid;
+  box-sizing: border-box;
 }
 
 .form_light {
@@ -123,6 +122,7 @@
 
 .field {
   margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
 .field label {
@@ -141,6 +141,24 @@
   border: 1px solid #d4cfc4;
   font-size: 1rem;
   box-sizing: border-box;
+}
+
+.field input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+}
+
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+.form_dark .field input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
 }
 
 .field textarea {

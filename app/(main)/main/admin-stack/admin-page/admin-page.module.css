@@ -1,7 +1,6 @@
 .container {
-
-  padding: 2rem;
-  padding-bottom: var(--nav-height);
+  padding-inline: 2rem;
+  padding-top: 2rem;
   box-sizing: border-box;
 }
 
@@ -65,7 +64,8 @@
 
 @media screen and (max-width: 800px) {
   .container {
-    padding: 1.5rem;
+    padding-inline: 1.5rem;
+    padding-top: 1.5rem;
   }
 
   .title {
@@ -79,10 +79,17 @@
 
 @media screen and (max-width: 500px) {
   .container {
-    padding: 1rem;
+    padding-inline: 1rem;
+    padding-top: 1rem;
   }
 
   .title {
     font-size: 1.2rem;
+  }
+}
+
+@media screen and (min-width: 0px) {
+  .container {
+    padding-bottom: var(--nav-height);
   }
 }

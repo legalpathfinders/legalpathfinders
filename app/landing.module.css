@@ -4,15 +4,7 @@
   flex-direction: column;
 }
 
-.container_light {
-  background: #f5f0e8;
-  color: #2d2d2d;
-}
 
-.container_dark {
-  background: #2d2d2d;
-  color: #f5f0e8;
-}
 
 .nav {
   position: sticky;

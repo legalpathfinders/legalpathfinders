@@ -162,6 +162,13 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
                       {editing[col.key] === true || editing[col.key] === 'true' ? 'Yes' : 'No'}
                     </span>
                   </div>
+                ) : col.type === 'date' ? (
+                  <input 
+                    type="date" 
+                    name={col.key} 
+                    defaultValue={editing[col.key] || new Date().toISOString().split('T')[0]} 
+                    required={col.required}
+                  />
                 ) : (
                   <input type={col.type} name={col.key} defaultValue={editing[col.key]} required={col.required} />
                 )}
@@ -206,7 +213,7 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
         backDrop={true}
         titleProp={{
           text: selectField?.label || 'Select',
-          textColor: theme === 'light' ? 'var(--background)' : '#fff'
+          textColor: theme === 'light' ? '#2d2d2d' : '#fff'
         }}
         cancelButton={{
           position: 'right',
@@ -217,7 +224,7 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
           gapBetweenHandleAndTitle: '16px',
           gapBetweenTitleAndSearch: '8px',
           gapBetweenSearchAndContent: '16px',
-          backgroundColor: theme === 'light' ? '#fff' : 'var(--background)',
+          backgroundColor: theme === 'light' ? '#fff' : '#2d2d2d',
           handleColor: '#888',
           handleWidth: '48px'
         }}
