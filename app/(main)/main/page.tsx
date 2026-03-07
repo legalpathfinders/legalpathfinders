@@ -11,6 +11,7 @@ import SideBar from '@/lib/SideBar';
 import { HomeStack } from './home-stack/home-stack';
 import { ResourcesStack } from './resources-stack/resources-stack';
 import { ServicesStack } from './services-stack/services-stack';
+import { LegalStack } from './legal-stack/legal-stack';
 import { ProfileStack } from './profile-stack/profile-stack';
 import AdminStack from './admin-stack/admin-stack';
 
@@ -40,6 +41,7 @@ export default function Main() {
   const navStackMap = new Map([
     ['home-stack', <HomeStack key="home-stack" />],
     ['resources-stack', <ResourcesStack key="resources-stack" />],
+    ['legal-stack', <LegalStack key="legal-stack" />],
     ['services-stack', <ServicesStack key="services-stack" />],
     ['profile-stack', <ProfileStack key="profile-stack" />],
     ['admin-stack', <AdminStack key="admin-stack" />],
@@ -61,6 +63,16 @@ export default function Main() {
       svg: (
         <svg fill="none" height="1.30em" viewBox="0 0 24 24" width="1.30em" xmlns="http://www.w3.org/2000/svg">
           <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19ZM17 12H13V17H11V12H7L12 7L17 12Z" fill="currentColor" />
+        </svg>
+      ),
+    },
+    {
+      id: 'legal-stack',
+      text: t('legal') || 'Legal',
+      svg: (
+        <svg fill="none" height="1.30em" viewBox="0 0 24 24" width="1.30em" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 5V8C4 12 5.5 15.5 8 17.5C9.5 18.5 10.5 19 12 19C13.5 19 14.5 18.5 16 17.5C18.5 15.5 20 12 20 8V5L12 2ZM10 14L6 10L7.41 8.59L10 11.17L16.59 4.58L18 6L10 14Z" fill="currentColor" />
+          <path d="M2 20H22V22H2V20Z" fill="currentColor" />
         </svg>
       ),
     },

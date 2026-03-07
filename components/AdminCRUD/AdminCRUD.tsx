@@ -7,6 +7,7 @@ import { supabaseBrowser } from '@/lib/supabase/client';
 import { SelectionViewer, useSelectionController } from '@/lib/SelectionViewer';
 import { useDialog } from '@/lib/DialogViewer';
 import DialogCancel from '@/components/DialogCancel';
+import Loading from '@/components/LoadingSpinner/LoadingSpinner';
 import styles from './AdminCRUD.module.css';
 
 interface Column {
@@ -43,6 +44,8 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
   const [items, setItems] = useState<any[]>([]);
   const [editing, setEditing] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [selectField, setSelectField] = useState<Column | null>(null);
   const [selectId, selectController, selectIsOpen, selectState] = useSelectionController();
   const deleteDialog = useDialog();
@@ -55,7 +58,12 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
   }, [table]);
 
   const fetchItems = async () => {
-    const { data } = await supabaseBrowser.from(table).select('*').order('created_at', { ascending: false });
+    // Use uploaded_at for resources table, created_at for others
+    const orderColumn = table === 'resources' ? 'uploaded_at' : 'created_at';
+    const { data, error } = await supabaseBrowser.from(table).select('*').order(orderColumn, { ascending: false });
+    if (error) {
+      console.error('Supabase error:', error);
+    }
     setItems(data || []);
     console.log('Fetched items:', data);
     setLoading(false);
@@ -63,17 +71,32 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaving(true);
     const formData = new FormData(e.target as HTMLFormElement);
     const data: any = {};
+    
     columns.forEach(col => {
-      const value = formData.get(col.key);
-      data[col.key] = col.type === 'boolean' ? value === 'true' : value;
+      if (col.type === 'boolean') {
+        // Boolean values are stored in state, not form
+        data[col.key] = editing[col.key] === true || editing[col.key] === 'true';
+      } else if (col.type === 'select') {
+        // Select values are stored in state, not form
+        data[col.key] = editing[col.key];
+      } else {
+        const value = formData.get(col.key);
+        data[col.key] = value;
+      }
     });
 
-    if (editing?.id) {
-      await supabaseBrowser.from(table).update(data).eq('id', editing.id);
-    } else {
-      await supabaseBrowser.from(table).insert([data]);
+    const { error } = editing?.id
+      ? await supabaseBrowser.from(table).update(data).eq('id', editing.id)
+      : await supabaseBrowser.from(table).insert([data]);
+    
+    setSaving(false);
+    if (error) {
+      console.error('Save error:', error);
+      alert(`Error: ${error.message}`);
+      return;
     }
 
     setEditing(null);
@@ -91,9 +114,11 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
 
   const confirmDelete = async () => {
     if (deletingId) {
+      setDeleting(true);
       await supabaseBrowser.from(table).delete().eq('id', deletingId);
       fetchItems();
       setDeletingId(null);
+      setDeleting(false);
     }
     deleteDialog.close();
   };
@@ -175,8 +200,10 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
               </div>
             ))}
             <div className={styles.actions}>
-              <button type="submit" className={styles.saveBtn}>Save</button>
-              <button type="button" onClick={() => setEditing(null)} className={styles.cancelBtn}>Cancel</button>
+              <button type="submit" className={styles.saveBtn} disabled={saving}>
+                {saving ? <Loading size="small" /> : 'Save'}
+              </button>
+              <button type="button" onClick={() => setEditing(null)} className={styles.cancelBtn} disabled={saving}>Cancel</button>
             </div>
           </form>
         )}
@@ -253,12 +280,15 @@ export default function AdminCRUD({ table, columns, title }: AdminCRUDProps) {
           {
             text: 'Delete',
             variant: 'danger',
-            onClick: confirmDelete
+            onClick: confirmDelete,
+            loading: deleting,
+            disabled: deleting
           },
           {
             text: 'Cancel',
             variant: 'secondary',
-            onClick: () => deleteDialog.close()
+            onClick: () => deleteDialog.close(),
+            disabled: deleting
           }
         ]}
         showCancel={false}

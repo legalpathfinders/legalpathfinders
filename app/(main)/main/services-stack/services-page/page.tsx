@@ -27,10 +27,14 @@ export default function ServicesPage() {
         .eq('is_active', true)
         .order('sort_order', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
       setServices(data?.map(d => ServiceItem.from(d)) || []);
     } catch (err) {
       console.error('Error fetching services:', err);
+      setServices([]);
     } finally {
       setLoading(false);
     }

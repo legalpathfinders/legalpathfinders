@@ -1,38 +1,35 @@
 'use client';
 
-import { useNav } from '@/lib/NavigationStack';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Resource, ResourceCategory } from '@/models/Resource';
 import { supabaseBrowser } from '@/lib/supabase/client';
-import { useDemandState } from '@/lib/state-stack';
-import styles from './resources-page.module.css';
+import styles from './resources.module.css';
 
-export default function ResourcesPage() {
-  const nav = useNav();
+export default function PublicResourcesPage() {
+  const router = useRouter();
   const { theme } = useTheme();
   const { t } = useLanguage();
-  const [resources, demandResources] = useDemandState<Resource[]>([], {
-    key: 'resources',
-    persist: true,
-    ttl: 300
-  });
+  const [resources, setResources] = useState<Resource[]>([]);
   const [filter, setFilter] = useState<ResourceCategory | 'all'>('all');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    demandResources(async ({ set }) => {
+    const fetchResources = async () => {
       const { data, error } = await supabaseBrowser
         .from('resources')
         .select('*')
         .eq('is_active', true)
         .order('uploaded_at', { ascending: false });
-      if (error) throw error;
-      set(data?.map(d => Resource.from(d)) || []);
+      if (!error && data) {
+        setResources(data.map(d => Resource.from(d)));
+      }
       setLoading(false);
-    });
-  }, [demandResources]);
+    };
+    fetchResources();
+  }, []);
 
   const filteredResources = filter === 'all' 
     ? resources 
@@ -40,6 +37,13 @@ export default function ResourcesPage() {
 
   return (
     <div className={`${styles.container} ${styles[`container_${theme}`]}`}>
+      <nav className={styles.nav}>
+        <button onClick={() => router.push('/')} className={styles.backBtn}>
+          <span>←</span>
+          <span className={styles.backText}>{t('back')}</span>
+        </button>
+      </nav>
+
       <div className={styles.content}>
         <div className={styles.topSection}>
           <h1 className={styles.title}>{t('resources')}</h1>

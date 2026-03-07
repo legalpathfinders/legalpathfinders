@@ -13,6 +13,7 @@ export default function LandingPage() {
   const { theme, toggleTheme } = useTheme();
   const { t, lang, setLang } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <div className={`${styles.container} ${styles[`container_${theme}`]}`}>
@@ -26,12 +27,27 @@ export default function LandingPage() {
               height={40}
               className={styles.logoImage}
             />
-            <span className={styles.logoText}>Legal Pathfinders</span>
           </div>
           <div className={styles.navLinks}>
-            <a href="/about">{t('about_text')}</a>
-            <a href="/privacy">{t('privacy_policy')}</a>
-            <a href="/terms">{t('terms_of_service')}</a>
+            <a href="/opportunities">{t('opportunities') || 'Opportunities'}</a>
+            <a href="/resources">{t('resources') || 'Resources'}</a>
+            <a href="/events">{t('events') || 'Events'}</a>
+            <a href="/services">{t('services') || 'Services'}</a>
+            <div className={styles.dropdown}>
+              <button 
+                className={styles.dropdownBtn} 
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                More ▾
+              </button>
+              {isDropdownOpen && (
+                <div className={styles.dropdownContent}>
+                  <a href="/about">{t('about_text')}</a>
+                  <a href="/privacy">{t('privacy_policy')}</a>
+                  <a href="/terms">{t('terms_of_service')}</a>
+                </div>
+              )}
+            </div>
           </div>
           <div className={styles.navActions}>
             <button onClick={toggleTheme} className={styles.iconBtn}>
@@ -73,7 +89,6 @@ export default function LandingPage() {
                 width={32} 
                 height={32}
               />
-              <span>Legal Pathfinders</span>
             </div>
             <button onClick={() => setIsMenuOpen(false)} className={styles.closeBtn}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -83,6 +98,11 @@ export default function LandingPage() {
             </button>
           </div>
           <div className={styles.drawerContent}>
+            <a href="/opportunities" className={styles.drawerLink}>{t('opportunities') || 'Opportunities'}</a>
+            <a href="/resources" className={styles.drawerLink}>{t('resources') || 'Resources'}</a>
+            <a href="/events" className={styles.drawerLink}>{t('events') || 'Events'}</a>
+            <a href="/services" className={styles.drawerLink}>{t('services') || 'Services'}</a>
+            <div className={styles.drawerDivider}></div>
             <a href="/about" className={styles.drawerLink}>{t('about_text')}</a>
             <a href="/privacy" className={styles.drawerLink}>{t('privacy_policy')}</a>
             <a href="/terms" className={styles.drawerLink}>{t('terms_of_service')}</a>
@@ -102,11 +122,11 @@ export default function LandingPage() {
           <h1 className={styles.heroTitle}>{t('legal_pathfinders')}</h1>
           <p className={styles.heroSubtitle}>{t('community_tagline')}</p>
           <div className={styles.heroCta}>
-            <button onClick={() => router.push('/signup')} className={styles.primaryBtn}>
-              {t('get_started')}
-            </button>
             <button onClick={() => router.push('/about')} className={styles.secondaryBtn}>
               {t('learn_more')}
+            </button>
+            <button onClick={() => router.push('/signup')} className={styles.primaryBtn}>
+              {t('get_started')}
             </button>
           </div>
         </section>

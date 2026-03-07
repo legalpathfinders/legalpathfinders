@@ -2,11 +2,9 @@
 
 import NavigationStack from '@/lib/NavigationStack';
 import ResourcesPage from './resources-page/page';
-import LegalSeriesPage from './legal-series-page/page';
 
 const resourcesStackNavLink = {
-  resources_page: ResourcesPage,
-  legal_series_page: LegalSeriesPage,
+  resources_page: ResourcesPage
 };
 
 export const ResourcesStack = () => (

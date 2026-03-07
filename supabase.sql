@@ -306,52 +306,58 @@ ALTER TABLE news_items              ENABLE ROW LEVEL SECURITY;
 ALTER TABLE organizations           ENABLE ROW LEVEL SECURITY;
 ALTER TABLE newsletter_subscribers  ENABLE ROW LEVEL SECURITY;
 
--- Profiles: users can read/update their own profile, admins can do everything
-CREATE POLICY "Users can read own profile" ON profiles FOR SELECT USING (auth.uid() = id);
+-- Profiles: users can read all profiles, users can update own profile, admins can do everything
+CREATE POLICY "Public can read all profiles" ON profiles FOR SELECT USING (TRUE);
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
-CREATE POLICY "Admins can read all profiles" ON profiles FOR SELECT USING (role = 'admin');
-CREATE POLICY "Admins can update all profiles" ON profiles FOR UPDATE USING (role = 'admin');
-CREATE POLICY "Admins can delete profiles" ON profiles FOR DELETE USING (role = 'admin');
+CREATE POLICY "Admins can insert profiles" ON profiles FOR INSERT WITH CHECK (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admins can update profiles" ON profiles FOR UPDATE USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
+CREATE POLICY "Admins can delete profiles" ON profiles FOR DELETE USING (
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+);
 
--- Admin policies: admins can do everything (using auth.uid() to avoid recursion)
+-- Admin policies: admins can do everything (using EXISTS to avoid recursion)
 CREATE POLICY "Admins full access opportunities" ON opportunities FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 CREATE POLICY "Admins full access resources" ON resources FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 CREATE POLICY "Admins full access legal_series" ON legal_series FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 CREATE POLICY "Admins full access services" ON services FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 CREATE POLICY "Admins full access events" ON events FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 CREATE POLICY "Admins full access news_items" ON news_items FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 CREATE POLICY "Admins full access organizations" ON organizations FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 CREATE POLICY "Admins can read newsletter_subscribers" ON newsletter_subscribers FOR SELECT USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 
--- Public read access for content tables
-CREATE POLICY "Public can read opportunities"     ON opportunities    FOR SELECT USING (is_active = TRUE);
-CREATE POLICY "Public can read resources"         ON resources        FOR SELECT USING (is_active = TRUE);
-CREATE POLICY "Public can read legal_series"      ON legal_series     FOR SELECT USING (is_published = TRUE);
-CREATE POLICY "Public can read services"          ON services         FOR SELECT USING (is_active = TRUE);
-CREATE POLICY "Public can read events"            ON events           FOR SELECT USING (is_active = TRUE);
-CREATE POLICY "Public can read news_items"        ON news_items       FOR SELECT USING (is_active = TRUE);
-CREATE POLICY "Public can read organizations"     ON organizations    FOR SELECT USING (is_active = TRUE);
+-- Public read access for all content tables
+CREATE POLICY "Public can read all opportunities"     ON opportunities    FOR SELECT USING (TRUE);
+CREATE POLICY "Public can read all resources"         ON resources        FOR SELECT USING (TRUE);
+CREATE POLICY "Public can read all legal_series"      ON legal_series     FOR SELECT USING (TRUE);
+CREATE POLICY "Public can read all services"          ON services         FOR SELECT USING (TRUE);
+CREATE POLICY "Public can read all events"            ON events           FOR SELECT USING (TRUE);
+CREATE POLICY "Public can read all news_items"        ON news_items       FOR SELECT USING (TRUE);
+CREATE POLICY "Public can read all organizations"     ON organizations    FOR SELECT USING (TRUE);
 
 -- Allow anyone to subscribe to newsletter (insert only)
 CREATE POLICY "Public can subscribe to newsletter" ON newsletter_subscribers FOR INSERT WITH CHECK (TRUE);
 CREATE POLICY "Admins full access newsletter_subscribers" ON newsletter_subscribers FOR ALL USING (
-  auth.uid() IN (SELECT id FROM profiles WHERE role = 'admin')
+  EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
 );
 
 
